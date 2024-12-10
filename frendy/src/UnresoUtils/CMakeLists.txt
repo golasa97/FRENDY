@@ -6,13 +6,7 @@ add_library(UnresoUtils
 
 target_include_directories(UnresoUtils PUBLIC ${CMAKE_SOURCE_DIR}/include)
 
-target_link_libraries(UnresoUtils PUBLIC
-    Boost::timer
-    CommonUtils
-    MathUtils
-    NuclearDataUtils
+target_link_libraries(UnresoUtils PRIVATE
+    CoreLib
     ReconResonance
-    FrendyUtils
-    EndfUtils
-    NjoyUtils
 )

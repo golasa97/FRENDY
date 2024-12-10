@@ -6,9 +6,6 @@ add_library(NuclearDataModifier
 )
 
 target_include_directories(NuclearDataModifier PUBLIC ${CMAKE_SOURCE_DIR}/include)
-target_link_libraries(NuclearDataModifier PUBLIC
-    CommonUtils
-    NuclearDataUtils
-    EndfUtils
-    FrendyUtils
+target_link_libraries(NuclearDataModifier PRIVATE
+    CoreLib
 )

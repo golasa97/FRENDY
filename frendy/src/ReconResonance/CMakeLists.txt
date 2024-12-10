@@ -53,16 +53,7 @@ add_library(ReconResonance
 # Include this directory for public access to headers
 target_include_directories(ReconResonance PUBLIC ${CMAKE_SOURCE_DIR}/include)
 
-target_link_libraries(ReconResonance PUBLIC
-    CommonUtils
-    Config
-    EndfUtils
-    FrendyUtils
-    MathUtils
-    NjoyUtils
-    NuclearDataUtils
-    TabUtils
-    Boost::timer
-    Boost::chrono
+target_link_libraries(ReconResonance PRIVATE
+    CoreLib
     LAPACK::LAPACK
 )

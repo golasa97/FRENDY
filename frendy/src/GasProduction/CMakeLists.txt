@@ -6,11 +6,6 @@ add_library(GasProduction
 
 target_include_directories(GasProduction PUBLIC ${CMAKE_SOURCE_DIR}/include)
 
-target_link_libraries(GasProduction PUBLIC
-    Boost::timer
-    CommonUtils
-    FrendyUtils
-    NuclearDataUtils
-    EndfUtils
-    NjoyUtils
+target_link_libraries(GasProduction PRIVATE
+    CoreLib
 )

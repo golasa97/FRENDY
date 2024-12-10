@@ -26,11 +26,10 @@ PerturbUtils/PerturbNuclearData.cpp
 )
 
 target_include_directories(ContinuousEnergyXSUtils PUBLIC ${CMAKE_SOURCE_DIR}/include)
-target_link_libraries(ContinuousEnergyXSUtils PUBLIC
-    Config
+target_link_libraries(ContinuousEnergyXSUtils PRIVATE
+    Boost::timer
     CommonUtils
     TabUtils
-    Boost::timer
     FrendyUtils
     NjoyUtils
     EndfUtils

@@ -23,12 +23,11 @@ add_library(FrendyUtils
 # Include this directory for public access to headers
 target_include_directories(FrendyUtils PUBLIC ${CMAKE_SOURCE_DIR}/include
 )
-
-target_link_libraries(FrendyUtils PUBLIC
+target_link_libraries(FrendyUtils PRIVATE
     CommonUtils
-    Config
     ContinuousEnergyXSUtils
     MathUtils
     NuclearDataUtils
     TabUtils
 )
+

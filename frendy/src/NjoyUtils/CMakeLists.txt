@@ -20,9 +20,8 @@ add_library(NjoyUtils
 
 # Include this directory for public access to headers
 target_include_directories(NjoyUtils PUBLIC ${CMAKE_SOURCE_DIR}/include)
-target_link_libraries(NjoyUtils    PUBLIC
+target_link_libraries(NjoyUtils PRIVATE
     CommonUtils
-    Config
     EndfUtils
     FrendyUtils
     MathUtils

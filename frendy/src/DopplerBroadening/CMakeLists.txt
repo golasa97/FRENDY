@@ -8,11 +8,6 @@ add_library(DopplerBroadening
 )
 
 target_include_directories(DopplerBroadening PUBLIC ${CMAKE_SOURCE_DIR}/include)
-target_link_libraries(DopplerBroadening PUBLIC
-    CommonUtils
-    MathUtils
-    NuclearDataUtils
-    FrendyUtils
-    NjoyUtils
-    Boost::timer
+target_link_libraries(DopplerBroadening PRIVATE
+    CoreLib
 )

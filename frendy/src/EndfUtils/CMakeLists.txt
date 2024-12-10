@@ -1,7 +1,6 @@
 # CMakeLists.txt for EndfUtils
 
 # Set a common include directory
-include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 
 # Create a single library with all sources from the EndfUtils submodules
 add_library(EndfUtils
@@ -167,14 +166,11 @@ add_library(EndfUtils
 )
 
 target_include_directories(EndfUtils PUBLIC ${CMAKE_SOURCE_DIR}/include)
-
-# Optionally, link any external dependencies if needed for endf_utils
-# target_link_libraries(endf_utils PRIVATE <other_libraries>)
-target_link_libraries(EndfUtils PUBLIC
+target_link_libraries(EndfUtils PRIVATE
     CommonUtils
-    Config
-    ContinuousEnergyXSUtils
     MathUtils
+    ContinuousEnergyXSUtils
     NuclearDataUtils
     TabUtils
 )
+

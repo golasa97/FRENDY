@@ -6,19 +6,14 @@ add_library(NuclearDataProcessor
 )
 
 target_include_directories(NuclearDataProcessor PUBLIC ${CMAKE_SOURCE_DIR}/include)
-target_link_libraries(NuclearDataProcessor PUBLIC
-    FrendyUtils
-    NuclearDataUtils
+target_link_libraries(NuclearDataProcessor PRIVATE
+    CoreLib
     ReconResonance
     DopplerBroadening
     ThermalScatter
     UnresoUtils
     GasProduction
-    ContinuousEnergyXSUtils
     NuclearDataModifier
     Plotter
     MGXSUtils
-    NjoyUtils
-    Boost::timer
-    EndfUtils
 )

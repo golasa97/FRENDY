@@ -10,11 +10,6 @@ add_library(ThermalScatter
 )
 
 target_include_directories(ThermalScatter PUBLIC ${CMAKE_SOURCE_DIR}/include)
-target_link_libraries(ThermalScatter PUBLIC
-    CommonUtils
-    NuclearDataUtils
-    MathUtils
-    FrendyUtils
-    EndfUtils
-    NjoyUtils
+target_link_libraries(ThermalScatter PRIVATE
+    CoreLib
 )

@@ -6,13 +6,8 @@ add_library(Plotter
 )
 
 target_include_directories(Plotter PUBLIC ${CMAKE_SOURCE_DIR}/include)
-target_link_libraries(Plotter PUBLIC
-    CommonUtils
-    NuclearDataUtils
-    ContinuousEnergyXSUtils
-    TabUtils
+target_link_libraries(Plotter PRIVATE
+    CoreLib
     DopplerBroadening
-    EndfUtils
     ReconResonance
-    FrendyUtils
 )

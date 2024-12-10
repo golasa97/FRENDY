@@ -53,11 +53,9 @@ add_library(NuclearDataUtils
 
 target_include_directories(NuclearDataUtils PUBLIC ${CMAKE_SOURCE_DIR}/include)
 
-target_link_libraries(NuclearDataUtils PUBLIC
+target_link_libraries(NuclearDataUtils PRIVATE
     CommonUtils
-    Config
-    EndfUtils
     MathUtils
     TabUtils
+    EndfUtils
 )
-

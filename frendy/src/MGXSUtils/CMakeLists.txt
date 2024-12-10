@@ -27,13 +27,7 @@ add_library(MGXSUtils
 )
 
 target_include_directories(MGXSUtils PUBLIC ${CMAKE_SOURCE_DIR}/include)
-target_link_libraries(MGXSUtils PUBLIC
-    CommonUtils
-    FrendyUtils
-    ContinuousEnergyXSUtils
-    NjoyUtils
-    NuclearDataUtils
-    EndfUtils
-    TabUtils
+target_link_libraries(MGXSUtils PRIVATE
+    CoreLib
     NuclearDataModifier
 )
