@@ -1,0 +1,18 @@
+g++ -Wall -O2 -MMD -MP -I../../frendy/  -std=c++11 -o MakePerturbationFactor.o_m -c MakePerturbationFactor.cpp
+g++ -Wall -O2 -MMD -MP -I../../frendy/  -std=c++11 -o MakePerturbationFactorMain.o_m -c MakePerturbationFactorMain.cpp
+ar crsv libperturbfactor.a_m ../../frendy/CommonUtils/CommentRemover.o_m ../../frendy/CommonUtils/DigitAdjuster.o_m ../../frendy/CommonUtils/ErrorManager.o_m ../../frendy/CommonUtils/FileCommentRemover.o_m ../../frendy/CommonUtils/StringUtils.o_m ../../frendy/CommonUtils/TabAdjuster.o_m ../../frendy/CommonUtils/TabInterpolator.o_m ../../frendy/CommonUtils/TimeUtils.o_m ../../frendy/CommonUtils/VectorClearer.o_m ../../frendy/CommonUtils/VectorCopier.o_m ../../frendy/CommonUtils/VectorSizeChecker.o_m MakePerturbationFactor.o_m MakePerturbationFactorMain.o_m
+r - ../../frendy/CommonUtils/CommentRemover.o_m
+r - ../../frendy/CommonUtils/DigitAdjuster.o_m
+r - ../../frendy/CommonUtils/ErrorManager.o_m
+r - ../../frendy/CommonUtils/FileCommentRemover.o_m
+r - ../../frendy/CommonUtils/StringUtils.o_m
+r - ../../frendy/CommonUtils/TabAdjuster.o_m
+r - ../../frendy/CommonUtils/TabInterpolator.o_m
+r - ../../frendy/CommonUtils/TimeUtils.o_m
+r - ../../frendy/CommonUtils/VectorClearer.o_m
+r - ../../frendy/CommonUtils/VectorCopier.o_m
+r - ../../frendy/CommonUtils/VectorSizeChecker.o_m
+r - MakePerturbationFactor.o_m
+r - MakePerturbationFactorMain.o_m
+ranlib libperturbfactor.a_m
+g++ -o make_perturbation_factor.exe MakePerturbationFactorMain.o_m libperturbfactor.a_m -L. 

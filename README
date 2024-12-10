@@ -1,0 +1,77 @@
+Update : 2024/01/18
+
+1. Directory structure of FRENDY
+    The directory structure of FRENDY is as follows:
+      frend_project
+       |- README : This file
+       |- frendy : Source files of FRENDY
+       |- tests  : Source files to run the Boost.Test library for verification
+       |- sample : Input files for the test calculations
+       |- tools  : Tools which use FRENDY modules.
+
+
+2. How to Install FRENDY on Linux, UNIX or MacOS Platforms
+    A shell script of "compile_all.csh" is included in the "frendy" directory
+    to compile FRENDY source codes. The user run only this shell script or issue
+    the "make" command in "frendy/main" or "frendy/main_njoy_mode" directory.
+    FRENDY has the NJOY mode which processes the evaluated nuclear data file with
+    the NJOY calculation method. The executable file in "frendy/main_njoy_mode" 
+    calculates using the NJOY calculation method.
+
+    The default compiler to process FRENDY is GCC.
+    If the user wants to use aother compiler or modify the compiler option,
+    please change "CXX = g++" for compiler and "CXXFLAGS = -Wall -O2 -MMD -MP"
+    for compiler option.
+
+    FRENDY uses AMUR code to process the R-matrix Limited in the
+    resonance reconstruction. The AMUR code uses the function of
+    the LAPACK library. Users have to install the LAPACK library
+    before they compile FRENDY.
+    If the user does not want to use the LAPACK library (or the
+    reconstruction of the R-matrix Limited is not required),
+    please add and modify following lines in frendy/main/Makefile
+      CXXFLAGS = -Wall -O2 -MMD -MP -I../ 
+      CXXFLAGS = -Wall -O2 -MMD -MP -I../ -DNO_AMUR_MODE
+    and
+      $(CXX) -o $@ $^ -L. -llapack -lblas
+      $(CXX) -o $@ $^ -L.
+
+
+3. Source files to run the Boost.Test library for verification
+    FRENDY prepares test program using Boost.Test library to verify
+    each class and each function.
+    The test program for each class are prepared in
+    "frend_project/tests" directory.
+    If the user wants to run this test program, please run
+    "run_all_class.csh" shell in "tests" directory.
+    Note that the compiler for this test program is GCC. If user
+    wants to use other compiler, the user has to change all shells
+    in "tests" directory.
+
+
+4. Test calculation with samples.
+    The sample input files which are listed in the FRENDY manual
+    are used in this sample calculation.
+    Nuclides and materials are obtained from JENDL-4.0.
+      
+    The directory structure of sample directory is as follows:
+      sample
+       |- input : Input file to generate ACE file
+       |- lib   : Nuclear data (from JENDL-4.0)
+       |- run   : Running of FRENDY
+
+    The user runs only shell (run_all.csh) to calculate samples.
+    The calculation time is about 3 hours using a CPU (3.70 GHz).
+    
+
+5. Download site of FRENDY
+   https://rpg.jaea.go.jp/main/en/program_frendy/
+
+6. Manual of FRENDY
+    K. Tada, A. Yamamoto, S. Kunieda, Y. Nagaya, "Nuclear data processing code FRENDY version 2," JAEA-Data/Code 2022-009 (2023).
+    https://doi.org/10.11484/jaea-data-code-2022-009
+
+7. Reference of FRENDY
+    K. Tada, A. Yamamoto, S. Kunieda, C. Konno, R. Kondo, T. Endo, G. Chiba, M. Ono, M. Tojo, "Development and verification of nuclear data processing code FRENDY version 2," J. Nucl. Sci. Technol. (2023).
+    https://www.tandfonline.com/doi/full/10.1080/00223131.2023.2278600
+

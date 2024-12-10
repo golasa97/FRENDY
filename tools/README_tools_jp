@@ -1,0 +1,279 @@
+2021/12/24改訂
+
+このファイルはtoolsディレクトリに収納されている各ツールの概要とその利用方法について説明する。
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+************************************
+*                                  *
+*     make_perturbation_factor     *
+*                                  *
+************************************
+
+=== 概要 ===
+このプログラムはACEファイルを用いたランダムサンプリング法を用いた不確かさ解析を行うツールである。
+このプログラムは本ディレクトリにあるperturbation_ace_fileの入力ファイルを作る目的で開発している。
+このツールでは、断面積の相対共分散行列から摂動因子を作成し、perturbation_ace_fileの入力となるデータを出力する。
+なお、本ツールは行列計算ライブラリのEigenを利用している。
+EigenはMPL2ライセンス準拠のプログラムであり、本ツールのライセンスはFRENDYとは異なり、MPL2ライセンス準拠であることに注意する必要がある。
+
+
+=== コンパイル方法 ===
+このプログラムをコンパイルするためには、tools/make_perturbation_factorディレクトリに移動し、makeを実行するか、tools/make_perturbation_factor/sampleでrun_make_perturbation_factor.cshを実行すればよい。
+run_make_perturbation_factor.cshを実行した場合、サンプル計算も同時に実行される。
+
+なお、このプログラムではEigenを利用しているため、Eigenをダウンロードする必要がある。
+Eigenは
+  http://eigen.tuxfamily.org/index.php?title=Main_Page
+からダウンロードすることができる。
+Eigenをダウンロードし、解凍したら解凍したファイルに出来るEigenディレクトリをtools/make_perturbation_factor/sampleディレクトリにコピーするか、tools/make_perturbation_factor/sampleディレクトリにEigenディレクトリのリンクを貼ればEigenを利用することが出来る。
+
+
+=== 実行方法 ===
+このプログラムを実行する場合、"./make_perturbation_factor.exe  sample.inp"と実行すればよい。
+なお、ここでmake_perturbation_factor.exeはmakeコマンドで作成される実行ファイルで、sample.inpは入力ファイルである。
+
+
+=== 入力説明 ===
+必要な入力データは
+  (1) サンプルサイズ
+  (2) 乱数シード
+  (3) 共分散行列のファイル名
+  (4) 共分散行列のエネルギーグリッド[MeV]
+  (5) 共分散データの核種名
+  (6) 共分散データの反応タイプ番号(MT番号)
+の6項目である。
+このプログラムではこれらの入力を以下のように入力する必要がある。
+
+(1) サンプルサイズ：ランダムサンプリングのサンプリング数。
+                    sample_noがサンプリング数であり、sample_no数分だけファイルが出力される。
+  <sample_size>  sample_no
+    ※ sample_no : int
+
+(2) 乱数シード：共分散行列から多変量正規乱数行列を作成する際の初期乱数である。
+  <seed> seed_val
+    ※ seed_val : int
+
+(3) 共分散行列のファイル名：共分散行列データのファイル名である。
+                            なお、共分散データは相対共分散行列でなければならない。
+                            また、現在はcsvファイルで取り込むことを想定している。
+  <relative_covariance> cov_file_name
+    ※ cov_file_name : string
+
+(4) 共分散行列のエネルギーグリッド：共分散行列のエネルギー群の各エネルギーグリッド点。
+                                    単位はMeVで、共分散のエネルギー群構造と群数と並び順を一致させる必要がある。
+                                    また、エネルギーグリッドは丸括弧"()"で括る必要がある。
+  <energy_grid> (G01  G02  G03  G04  G05
+                 G06  G07  G08  G09  G10)
+    ※ G01, G02, ... G10 : real
+
+(5) 共分散データの核種名：取り扱う共分散データの核種名を入力する。
+                          この核種名は作成したランダムサンプリングのファイルが出力されるディレクトリ名となる。
+                          また、複数の核種を取り扱っている場合は丸括弧"()"で括る必要がある。
+  <nuclide> (nucl01  nucl02)
+    ※ nucl01, nucl02 : string 
+
+(6) 共分散データの反応タイプ番号：取り扱う共分散データの反応タイプ番号(MT番号)を入力する。
+                                  複数の反応を取り扱っている場合は丸括弧"()"で括る必要がある。
+  <reaction> (MT01  MT02)
+    ※ MT01, MT02 : int 
+
+=== サンプル入力(1) ===
+  <sample_size>           100                      //Sample No.           : 100
+  <seed>                  20190504                 //Initial random seed  : 20190504
+  <relative_covariance>   cov_matrix.csv           //Covariance file name : "cov_matrix.csv"
+  <energy_grid>         (1.0E-11   6.8E-7   2.0E1) //Energy grid No.      : 2
+                                                   //Energy grid boundary : 1.0E-5 eV, 0.68 eV, 20MeV
+  <nuclide>             (U235)                     //Nuclide name         : U235
+  <reaction>            (2  18  102)               //Reaction type        : 2(elas), 18(fis), 102(rad)
+
+
+=== サンプル入力(2) ===
+  <sample_size>           100                        //Sample No.              : 100
+  <seed>                  20190504                   //Initial random seed     : 20190504
+  <relative_covariance>   cov_matrix.csv             //Covariance file name    : "cov_matrix.csv"
+  <energy_grid>           (1.0E-11   6.8E-7   2.0E1) //Energy grid No.         : 2
+                                                     //Energy grid boundary    : 1.0E-5 eV, 0.68 eV, 20MeV
+  <nuclide>               (U235  U238)               //Nuclide name            : U235, U238
+  <reaction>              (2  18  102)  (4  16)      //Reaction type for U235  : 2, 18, 102
+                                                     //Reaction type fof U238  : 4, 16
+
+=== 出力形式 ===
+出力ファイルは<nuclide>で指定したディレクトリ名に保存される。
+例えば、サンプル(1)のようにU235であった場合、U235_0001, U235_0002, ...という形式で出力される。
+
+出力ファイルの形式はperturbation_ace_fileの入力となっており、
+  "反応タイプ(MT番号)"  "摂動するエネルギーの下限[MeV]"  "摂動するエネルギーの上限[MeV]"  "摂動量"
+である。
+
+
+=== Reference ===
+R. Kondo, T. Endo, A. Yamamoto, K. Tada, “Implementation of random sampling for ACE-format cross sections using FRENDY and application to uncertainty reduction,” Proc. M&C2019, Aug. 25-29, (2019).
+近藤諒一、遠藤知弘、山本章夫、多田健一、「FRENDYを用いたACE形式断面積のランダムサンプリング実装」、日本原子力学会2019年春の年会、2J08 (2019).
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+*********************************
+*                               *
+*     perturbation_ace_file     *
+*                               *
+*********************************
+
+=== 概要 ===
+このプログラムはACEファイルに摂動を与えるプログラムである。
+指定したACEファイルについて、核反応、エネルギー領域、摂動量を指定すると指定した反応の断面積を摂動したACEファイルを出力する。
+
+
+=== コンパイル方法 ===
+このプログラムをコンパイルするためには、tools/perturbation_ace_fileディレクトリに移動し、makeを実行するか、tools/perturbation_ace_file/sampleでrun_perturbation_ace_file.cshを実行すればよい。
+run_perturbation_ace_file.cshを実行した場合、サンプル計算も同時に実行される。
+
+
+=== 実行方法 ===
+このプログラムを実行する場合、"./perturbation_ace_file.exe  ace_file.ace  perturbation_list.inp"と実行すればよい。
+なお、ここでperturbation_ace_file.exeはmakeコマンドで作成される実行ファイルで、ace_file.aceは摂動を行うACEファイル、perturbation_list.inpは摂動量を指定する入力ファイルのリストである。
+
+
+=== 入力説明 ===
+摂動量を指定する入力ファイルのリストには、摂動量を指定する入力ファイルが記述されている。
+なお、摂動量を指定する入力ファイル名はAAA_1234と最後が4桁の数字になっている必要がある。
+
+例えば、
+  inp/U235_0001
+  inp/U235_0020
+  inp/U235_0300
+となっていれば、inpディレクトリ中のU235_0001、U235_0020、U235_0300のファイルを読み取り、個々の摂動ファイルを読み取って作成した3つのACEファイルを出力する。
+なお、出力ファイル名は摂動量を指定する入力ファイル名の最後の4桁の数字を追加した形となっている。
+この例では、摂動を行うACEファイルをace_file.aceとすると、出力ファイル名はace_file.ace_0001、ace_file.ace_0020、ace_file.ace_0300となる。
+
+摂動量を指定する入力ファイルには以下の4項目を一行に並べる必要がある。
+  "反応タイプ(MT番号)"  "摂動するエネルギーの上限[MeV]"  "摂動するエネルギーの下限[MeV]"  "摂動量"
+もしくは
+  "反応タイプ(MT番号)"  "摂動するエネルギーの下限[MeV]"  "摂動するエネルギーの上限[MeV]"  "摂動量"
+
+例えば、弾性散乱断面積(MT=2)の1.0E-11 MeVから1.0E-10 MeVの断面積を1.1倍し、核分裂断面積(MT=18)の1.0 eVから10.0 eVを0.9倍する場合には
+   2  1.0E-10  1.0-11  1.1
+  18  1.0E-5   1.0-6   0.9
+もしくは
+   2  1.0E-11  1.0-10  1.1
+  18  1.0E-6   1.0-5   0.9
+とすればよい。
+
+対応する反応タイプはACEファイルに含まれるすべての反応断面積とnu(MT=452)、nu_d(MT=455)、nu_p(MT=456)、そして核分裂スペクトル(MT=1018)である。
+
+
+=== Reference ===
+R. Kondo, T. Endo, A. Yamamoto, K. Tada, “Implementation of random sampling for ACE-format cross sections using FRENDY and application to uncertainty reduction,” Proc. M&C2019, Aug. 25-29, (2019).
+近藤諒一、遠藤知弘、山本章夫、多田健一、「FRENDYを用いたACE形式断面積のランダムサンプリング実装」、日本原子力学会2019年春の年会、2J08 (2019).
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+*********************************
+*                               *
+*     read_errorr_data          *
+*                               *
+*********************************
+
+=== 概要 ===
+このプログラムはNJOYのERRORの出力ファイル(GENDFファイル)から、make_perturbation_factorツールに必要な入力データとCSV形式の共分散データを生成するツールである。
+
+
+=== コンパイル方法 ===
+このプログラムをコンパイルするためには、tools/read_errorr_dataディレクトリに移動し、makeを実行すればよい。
+
+
+=== 実行方法 ===
+このプログラムを実行コマンドは次の通りである。
+  ./read_errorr_data.exe  gendf_file_name  output_file_name  mt_numbers
+ここで、 "read_errorr_data.exe"はこのプログラムの実行ファイル名、"gendf_file_name"はNJOYのERRORRモジュールで生成されたGENDFファイル名、"output_file_name" は出力ファイル名、"mt_numbers"は反応タイプ(MT)の番号である。
+
+このプログラムでは、"output_file_name"_inp.datと"output_file_name"_cov.csvという名の二つの出力ファイルを出力する。
+"output_file_name"_inp.datがmake_perturbation_factorツールの入力ファイルであり、"output_file_name"_cov.csvがCSV形式の共分散データである。
+
+もし実行時にmt_numbersが無い場合、このプログラムはGENDFファイルを読み取り、多群の群構造と全ての共分散断面積を"output_file_name"_all_cov.datに出力する。
+また、実行時にmt_numbersに加えてoutput_file_nameも無い場合、このプログラムはGENDFファイルを読み取り、多群の群構造と全ての共分散断面積を画面に出力する。
+
+
+例えば、"./gendf/U235.gendf"という名前のGENDFファイルの中の、MT=2と102の共分散データを使ったランダムサンプリングを行いたい場合、実行コマンドは次の通りである。
+  ./read_errorr_data.exe  ./gendf/U235.gendf  ./out/U235_data  2  102
+この場合では、 make_perturbation_factorの入力ファイルが./out/U235_data_inp.datで、CSV形式の共分散データが./out/U235_data_cov.csvとなる。
+
+
+また、もし"./gendf/U235.gendf"という名前のGENDFファイルの中の、MT=18の共分散データを使ったランダムサンプリングを行いたい場合、実行コマンドは次の通りである。
+  ./read_errorr_data.exe  ./gendf/U235.gendf  ./out/U235_fis  18
+この場合では、 make_perturbation_factorの入力ファイルが./out/U235_fis_inp.datで、CSV形式の共分散データが./out/U235_fis_cov.csvとなる。
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+*********************************
+*                               *
+*     make_xsdir_list           *
+*                               *
+*********************************
+
+=== 概要 ===
+このプログラムはMCNPやPHITSを実行する際に必要となるXSDIRのリストを自動生成するものである。
+このプログラムを用いることで、手作業での追加・修正することなくMCNPやPHITSが実行可能となる。
+
+
+=== コンパイル方法 ===
+このプログラムをコンパイルするためには、tools/make_xsdir_listディレクトリに移動し、makeを実行すればよい。
+
+
+=== 実行方法 ===
+このプログラムを実行コマンドは次の通りである。
+  ./make_xsdir_list.exe  sample.inp
+ここで、"make_xsdir_list.exe"はこのプログラムの実行ファイル名で"sample.inp"がこのプログラムの入力ファイル名である。
+
+
+=== 入力説明 ===
+必要な入力データは
+  (1) ACEファイルの形式 (1:Fast, 2:TSL, 3:Dosimetry),
+  (2) 修正後のACEファイル名
+  (3) XSDIRのファイル名
+  (4) ACEファイルの保存元ディレクトリ
+  (5) ACEファイルのSuffix ID
+  (6) 処理モード (individual, collect)
+
+このプログラムでは、中性子入射(fast)、熱中性子散乱則(TSL)、ドジメトリー(Dosimetry)形式のACEファイルに対応している。
+
+処理モードは複数のACEファイルを結合して出すか、個別に出すかを選択するものである。
+
+処理モードとして"individual"を選択すると、全てのACEファイルが"ZA番号"."Suffix ID"というファイル名で出力される。
+例えば、Suffix IDが60cの場合、H-001は01001.60c、U-235は92235.60cとなる。
+また、処理モードとして"collect"を選択すると、(2)の修正後のACEファイル名で出力される。
+
+=== サンプル入力(1) ===
+
+1
+j40a00f
+xsdir.j40a00f
+../j40/ace
+50c
+individual
+
+
+この入力例では、"../j40/ace"ディレクトリにある中性子入射のACEファイルを対象としたXSDIRファイルを生成する。
+なお、Suffix IDは50cであり、個々のファイル名は"ZA番号".50cとなる。
+また、individualを選択すると、修正後のファイル名(この入力では"j40a00f")は無視される(処理結果に影響を与えない)。
+
+
+=== サンプル入力(2) ===
+
+2
+j40a00t
+xsdir.j40a00t
+../j40/ace_tsl
+50t
+collect
+
+
+この入力例では、"../j40/ace_tsl"ディレクトリにある熱中性子散乱則のACEファイルを対象としたXSDIRファイルを生成する。
+なお、Suffix IDは50tであり、まとめられたACEファイル名は"j40a00ta"、"j40a00tb"、"j40a00tc"、…となる。
+
+

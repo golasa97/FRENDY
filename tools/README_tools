@@ -1,0 +1,287 @@
+Update : 2021/12/24
+
+This file explains the overview of utility tools using FRENDY modules which are stored in this directory.
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+************************************
+*                                  *
+*     make_perturbation_factor     *
+*                                  *
+************************************
+
+=== Overview of make_perturbation_factor tool ===
+This program is the uncertainty analysis tool using the Random Sampling (RS) method for ACE file
+This program generates perturbation factor from the relative covariance matrix of cross section and outputs the input data of the "perturbation_ace_file" tool which is stored in this directory.
+
+Note that this tool uses the Eigen library which is the matrix calculation library.
+Eigen is an open-source software under the MP2L license.
+So, this tool is under the MP2L license.
+Please notice that this tool is not under the 2-clause BSD license which is used in FRENDY.
+
+
+=== How to compile make_perturbation_factor ===
+To compile this program, user has two options.
+One is running the "make" command on the "tools/make_perturbation_factor" directory and other is running the "run_make_perturbation_factor.csh" shell on the "tools/make_perturbation_factor/sample" directory.
+If user runs the "run_make_perturbation_factor.csh" shell, sample calculation is also performed.
+
+As described before, this program uses the Eigen library.
+Eigen library is obtained from following web site:
+  http://eigen.tuxfamily.org/index.php?title=Main_Page
+When the user downloads and decompressions the file, copy the "Eigen" directory to the "tools/make_perturbation_factor" directory or put a link on the "tools/make_perturbation_factor" directory.
+
+
+=== How to run make_perturbation_factor ===
+The execution command is as follows:
+  ./make_perturbation_factor.exe  sample.inp
+
+where, "make_perturbation_factor.exe" is executable of this program and "sample.inp" is the input file of this program.
+
+
+=== Input instructions of make_perturbation_factor ===
+This program requires following input data
+  (1) Sample size,
+  (2) Random seed,
+  (3) File name of covariance matrix,
+  (4) Energy grid of covariance matrix [MeV],
+  (5) Nuclide name of covariance matrix,
+  (6) Reaction type (MT) of covariance matrix
+
+In the input file, these terms are required and the user has to enclose by "<>" to set the data of each term.
+
+(1) Sample size (int) : Number of random sampling
+                        The number of random sampling is identical to the number of output files.
+  <sample_size>  sample_no
+
+(2) Random seed (int) : Initial random seed
+  <seed> seed_val
+
+(3) File name of covariance matrix (string)
+  <relative_covariance> cov_file_name
+
+(4) Energy grid of covariance matrix [MeV] (real) : Energy grid structure and number of energy grid must
+                                                    be identical to covariance matrix.
+                                                    Energy grid is enclosed by the bracket "()".
+  <energy_grid> (G01  G02  G03  G04  G05
+                 G06  G07  G08  G09  G10)
+
+(5) Nuclide name of covariance matrix (string) : This name is used as the directory name which stores the
+                                                 output files.
+                                                 If the covariance matrix uses multiple nuclides, nuclide
+                                                 name is enclosed by bracket "()".
+                                                 This program assumes that the data format of the
+                                                 covariance matrix is the CSV file.
+  <nuclide> (nucl01  nucl02)
+
+(6) Reaction type (MT) of covariance matrix (int) : If the covariance matrix uses multiple reaction type,
+                                                    reaction type is enclosed by bracket "()".
+  <reaction> (MT01  MT02)
+
+=== Sample input (1) ===
+  <sample_size>           100                      //Sample No.           : 100
+  <seed>                  20190504                 //Initial random seed  : 20190504
+  <relative_covariance>   cov_matrix.csv           //Covariance file name : "cov_matrix.csv"
+  <energy_grid>         (1.0E-11   6.8E-7   2.0E1) //Energy grid No.      : 2
+                                                   //Energy grid boundary : 1.0E-5 eV, 0.68 eV, 20MeV
+  <nuclide>             (U235)                     //Nuclide name         : U235
+  <reaction>            (2  18  102)               //Reaction type        : 2(elas), 18(fis), 102(rad)
+
+
+=== Sample input (2) ===
+  <sample_size>           100                        //Sample No.              : 100
+  <seed>                  20190504                   //Initial random seed     : 20190504
+  <relative_covariance>   cov_matrix.csv             //Covariance file name    : "cov_matrix.csv"
+  <energy_grid>           (1.0E-11   6.8E-7   2.0E1) //Energy grid No.         : 2
+                                                     //Energy grid boundary    : 1.0E-5 eV, 0.68 eV, 20MeV
+  <nuclide>               (U235  U238)               //Nuclide name            : U235, U238
+  <reaction>              (2  18  102)  (4  16)      //Reaction type for U235  : 2, 18, 102
+                                                     //Reaction type for U238  : 4, 16
+
+=== Output format ===
+The output format is as follows:
+  "Reaction type (MT)"  "Minimum energy of perturbation [MeV]"  "Maximum energy of perturbation [MeV]"  "Amount of perturbation"
+The output file repeats the above data.
+The output file is used for the input of the "perturbation_ace_file" tool.
+
+Output file is stored in the directory which the directory name is set in <nuclide>.
+For example, if the nuclide name is "U235", the output file is stored as U235/U235_0001, U235/U235_0002, ...
+
+
+=== Reference ===
+R. Kondo, T. Endo, A. Yamamoto, K. Tada, “Implementation of random sampling for ACE-format cross sections using FRENDY and application to uncertainty reduction,” Proc. M&C2019, Aug. 25-29, (2019).
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+*********************************
+*                               *
+*     perturbation_ace_file     *
+*                               *
+*********************************
+
+=== Overview of perturbation_ace_file ===
+This program generates the perturbed ACE file when the user sets the ACE file name, reaction type, energy region, and amount of perturbation.
+This program uses the output file of the "make_perturbation_factor" tool which is stored in this directory.
+
+
+=== How to compile perturbation_ace_file ===
+To compile this program, user has two options.
+One is running the "make" command on the "tools/perturbation_ace_file" directory and other is running the "run_perturbation_ace_file.csh" shell on the "tools/perturbation_ace_file/sample" directory.
+If user runs the "run_perturbation_ace_file.csh" shell, sample calculation is also performed.
+
+
+=== How to run perturbation_ace_file ===
+The execution command is as follows:
+  ./perturbation_ace_file.exe  ace_file.ace  sample.inp
+
+where, "perturbation_ace_file.exe" is executable of this program, "ace_file.ace" is the original ace file, and "sample.inp" is the input file list of this program.
+The input file list stores the name of the perturbation data file.
+This program is developed assuming that the output file of "make_perturbation_factor" is used as the perturbation data file.
+
+=== Instructions of perturbation data file ===
+The data format of the perturbation data file is as follows:
+  "Reaction type (MT)"  "Maximum energy of perturbation [MeV]"  "Minimum energy of perturbation [MeV]"  "Amount of perturbation"
+or
+  "Reaction type (MT)"  "Minimum energy of perturbation [MeV]"  "Maximum energy of perturbation [MeV]"  "Amount of perturbation"
+Note that the above data must be set in one line.
+The perturbation data file repeats the above data.
+So, the line number of the perturbation data file is identical to the perturbation data number.
+
+For example, user wants to modify elastic scattering cross section (MT=2) and fission cross section (MT=18), the perturbation data file is as follows:
+   2  1.0E-10  1.0-11  1.1
+  18  1.0E-5   1.0-6   0.9
+or
+   2  1.0E-11  1.0-10  1.1
+  18  1.0E-6   1.0-5   0.9
+In this case, this program multiplies elastic scattering cross section from 1.0E-5 eV to 1.0E-4 eV by 1.1 and fission cross section from 1.0 eV to 10.0 eV by 0.9, respectively.
+
+The available reaction type (MT number) is all reaction cross section type and nu (MT=452), nu_d (MT=455), nu_p (MT=456), and fission spectrum (MT=1018).
+
+This program is developed to use the output file of "make_perturbation_factor" as the perturbation data file.
+The perturbation data file name must be "AAA_nnnn", where "AAA" is the file name and "nnnn" is 4 numbers.
+For example, if the input file list set three perturbation data files as follows:
+  inp/U235_0001
+  inp/U235_0020
+  inp/U235_0300
+this program read "U235_0001", "U235_0020", and "U235_0300" files in the "inp" directory and output three perturbed ACE files.
+The perturbed ACE file name is automatically set using 4 numbers in the perturbation data file name ("nnnn" part).
+In this case, the perturbed ACE file name is ace_file.ace_0001, ace_file.ace_0020, and ace_file.ace_0300, when the original ACE file name is "ace_file.ace_0001".
+
+
+=== Reference ===
+R. Kondo, T. Endo, A. Yamamoto, K. Tada, “Implementation of random sampling for ACE-format cross sections using FRENDY and application to uncertainty reduction,” Proc. M&C2019, Aug. 25-29, (2019).
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+*********************************
+*                               *
+*     read_errorr_data          *
+*                               *
+*********************************
+
+=== Overview of read_errorr_data ===
+This program generates the input file and the CSV file for the make_perturbation_factor tool.
+This program uses the GENDF file generated by the ERRORR module in NJOY99, NJOY2012, and NJOY2016.
+
+
+=== How to compile read_errorr_data ===
+Running the "make" command on the "tools/read_errorr_data" directory.
+
+
+=== How to run read_errorr_data ===
+The execution command is as follows:
+  ./read_errorr_data.exe  gendf_file_name  output_file_name  mt_numbers
+
+where, "read_errorr_data.exe" is executable of this program, "gendf_file_name" is the GENDF file name generated by ERRORR module in NJOY, "output_file_name" is output file name of this program, and "mt_numbers" is reaction type (MT) number.
+
+This program generates two output files, i.e., "output_file_name"_inp.dat and "output_file_name"_cov.csv.
+The "output_file_name"_inp.dat file is the input file of the make_perturbation_factor tool.
+The "output_file_name"_cov.csv file is the covariance matrix file for the make_perturbation_factor tool.
+
+
+If the user does not set mt_numbers, this program outputs the energy groups structure and all covariance data in the GENDF file to the "output_file_name"_all_cov.dat.
+
+If the user does not set output_file_name and mt_numbers, this program outputs the energy groups structure and all covariance data in the GENDF file on the display.
+
+
+For example, if the user wants to process the "./gendf/U235.gendf" file and the MT numbers are 2 and 102, the command is as follows:
+  ./read_errorr_data.exe  ./gendf/U235.gendf  ./out/U235_data  2  102
+In this case, this tool outputs ./out/U235_data_inp.dat and ./out/U235_data_cov.csv files.
+ 
+
+If the user wants to process the "./gendf/U235.gendf" file and the MT number is 18, the command is as follows:
+  ./read_errorr_data.exe  ./gendf/U235.gendf  ./out/U235_fis  18
+In this case, this tool outputs ./out/U235_fis_inp.dat and ./out/U235_fis_cov.csv.
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+*********************************
+*                               *
+*     make_xsdir_list           *
+*                               *
+*********************************
+
+=== Overview of make_xsdir_list ===
+This program generates the XSDIR file and renames (copies) ACE files to run MCNP and PHITS without any modification.
+
+
+=== How to compile make_xsdir_list ===
+Running the "make" command on the "tools/make_xsdir_list" directory.
+
+
+=== How to run make_xsdir_list ===
+The execution command is as follows:
+  ./make_xsdir_list.exe  sample.inp
+where, "make_xsdir_list.exe" is executable of this program and "sample.inp" is the input file name of this program.
+
+
+=== Input instructions of make_xsdir_list ===
+This program requires following input data
+  (1) Type of ACE data file (1:Fast, 2:TSL, 3:Dosimetry),
+  (2) Modified ACE file name,
+  (3) XSDIR file name,
+  (4) ACE file directory,
+  (5) Suffix ID,
+  (6) Processing mode (individual, collect)
+
+This program only treat neutron-induced data (fast), thermal scattering law data (TSL), and dosimetry data (Dosimetry).
+
+The processing mode selects whether this tool combines the ACE file or not.
+If the user selects "individual", all ACE files are independently output and the output ACE file name is "ZA number"."suffix ID", e.g., 01001.60c for H-001 and 92235.60c for U-235.
+If the user selects "collect", all ACE files are combined and the output file name is "Modified ACE file name".
+
+=== Sample input (1) ===
+
+1
+j40a00f
+xsdir.j40a00f
+../j40/ace
+50c
+individual
+
+
+In this case, this tool generates the XSDIR list for the neutron-induced ACE files in the "../j40/ace" directory.
+The suffix ID of the renamed ACE file is "50c".
+The renamed ACE file name is "ZA number".50c.
+Note that the modified ACE file name "j40a00f" has no impact on the processing results.
+
+
+=== Sample input (2) ===
+
+2
+j40a00t
+xsdir.j40a00t
+../j40/ace_tsl
+50t
+collect
+
+
+In this case, this tool generates the XSDIR list for the thermal scattering law data in the "../j40/ace_tsl" directory.
+The suffix ID of the renamed ACE file is "50t".
+The renamed ACE file name is "j40a00ta", "j40a00tb", "j40a00tc", ....
+
