@@ -1,6 +1,6 @@
 
 # FRENDY: Nuclear Data Processing Code
-This is a fork of the JAEA nuclear processing code FRENDY. It's been modified to use CMAKE for compilation for parallel building and has been reorganized for better utilization of the c++ LSP.
+This is a fork of the JAEA nuclear processing code FRENDY. It's been modified to use CMAKE for compilation for parallel building and has been reorganized for better utilization of the clangd language server.
 
 ## Dependencies
 - **CMake**: Required for building the project.
@@ -10,7 +10,6 @@ This is a fork of the JAEA nuclear processing code FRENDY. It's been modified to
 
 Ensure all dependencies are installed before proceeding.
 
----
 
 ## Compilation Instructions
 
@@ -22,18 +21,16 @@ Ensure all dependencies are installed before proceeding.
 ```
 This produces a binary `frendy` in the `build/bin/` directory.
 
----
 
+---
 ## Download
 The FRENDY source code can be downloaded from the [JAEA website](https://rpg.jaea.go.jp/main/en/program_frendy/).
 
----
 
 ## Manual
 For detailed instructions on using FRENDY, refer to the official manual:  
 [https://doi.org/10.11484/jaea-data-code-2022-009](https://doi.org/10.11484/jaea-data-code-2022-009)
 
----
 
 ## Citation
 If you use FRENDY in your research, please cite the following paper:
